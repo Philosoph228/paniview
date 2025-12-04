@@ -1076,6 +1076,11 @@ HRESULT PaniViewApp_LoadFromFilePGM(PWSTR pszPath, FILE* pf)
   fread(data, dataLength, 1, pf);
 
   pConvertedSourceBitmap = WICLoadFromMemory(width, height, data, &GUID_WICPixelFormat8bppGray);
+
+  // Set the loaded source bitmap to application
+  LPPANIVIEWAPP pApp = GetApp();
+  pApp->m_pConvertedSourceBitmap = (IWICFormatConverter*)pConvertedSourceBitmap;
+
   LPRENDERERCONTEXT pRendererContext = PaniViewApp_GetRendererContext();
   if (pRendererContext) {
     pRendererContext->LoadWICBitmap(pRendererContext, pConvertedSourceBitmap);
@@ -1094,8 +1099,11 @@ HRESULT PaniViewApp_LoadFromFileWIC(PWSTR pszPath)
   HRESULT hr = S_OK;
 
   IWICBitmapSource* pConvertedSourceBitmap = NULL;
-
   pConvertedSourceBitmap = WICDecodeFromFilename(pszPath);
+
+  // Set the loaded source bitmap to application
+  LPPANIVIEWAPP pApp = GetApp();
+  pApp->m_pConvertedSourceBitmap = (IWICFormatConverter*)pConvertedSourceBitmap;
 
   LPRENDERERCONTEXT pRendererContext = PaniViewApp_GetRendererContext();
   if (pRendererContext) {
@@ -1161,11 +1169,11 @@ void PaniViewApp_OnCommand(WPARAM wParam, LPARAM lParam)
   switch ((int)wParam)
   {
   case IDM_FILE_OPEN:
-    PaniViewApp_OnMenuOpen();
+    // PaniViewApp_OnMenuOpen();
     break;
 
   case IDM_FILE_EXIT:
-    PaniViewApp_OnMenuExit();
+    // PaniViewApp_OnMenuExit();
     break;
   }
 }
@@ -2398,7 +2406,9 @@ void OpenGLRendererContext_CreateDeviceResources(LPOPENGLRENDERERCONTEXT pGLRend
 
     OpenGLRendererContext_CreateTexture(pGLRendererContext);
     OpenGLRendererContext_CreateVBO(pGLRendererContext);
-    OpenGLRendererContext_LoadWICBitmap(pGLRendererContext, (IWICBitmapSource*)pApp->m_pConvertedSourceBitmap);
+    if (pApp->m_pConvertedSourceBitmap) {
+        OpenGLRendererContext_LoadWICBitmap(pGLRendererContext, (IWICBitmapSource*)pApp->m_pConvertedSourceBitmap);
+    }
   }
 }
 

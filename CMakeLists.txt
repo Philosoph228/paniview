@@ -61,7 +61,7 @@ endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE comctl32 shlwapi pathcch d2d1 windowscodecs GLEW::GLEW)
 
 if(BUILD_TESTING)
-  find_package(cmocka 1.1.7 REQUIRED)
+  find_package(cmocka REQUIRED)
 
   set(TEST_TARGETS
     test_double_link_list
