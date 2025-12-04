@@ -1169,11 +1169,11 @@ void PaniViewApp_OnCommand(WPARAM wParam, LPARAM lParam)
   switch ((int)wParam)
   {
   case IDM_FILE_OPEN:
-    PaniViewApp_OnMenuOpen();
+    // PaniViewApp_OnMenuOpen();
     break;
 
   case IDM_FILE_EXIT:
-    PaniViewApp_OnMenuExit();
+    // PaniViewApp_OnMenuExit();
     break;
   }
 }
@@ -2406,7 +2406,9 @@ void OpenGLRendererContext_CreateDeviceResources(LPOPENGLRENDERERCONTEXT pGLRend
 
     OpenGLRendererContext_CreateTexture(pGLRendererContext);
     OpenGLRendererContext_CreateVBO(pGLRendererContext);
-    OpenGLRendererContext_LoadWICBitmap(pGLRendererContext, (IWICBitmapSource*)pApp->m_pConvertedSourceBitmap);
+    if (pApp->m_pConvertedSourceBitmap) {
+        OpenGLRendererContext_LoadWICBitmap(pGLRendererContext, (IWICBitmapSource*)pApp->m_pConvertedSourceBitmap);
+    }
   }
 }
 
