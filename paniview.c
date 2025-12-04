@@ -1076,6 +1076,11 @@ HRESULT PaniViewApp_LoadFromFilePGM(PWSTR pszPath, FILE* pf)
   fread(data, dataLength, 1, pf);
 
   pConvertedSourceBitmap = WICLoadFromMemory(width, height, data, &GUID_WICPixelFormat8bppGray);
+
+  // Set the loaded source bitmap to application
+  LPPANIVIEWAPP pApp = GetApp();
+  pApp->m_pConvertedSourceBitmap = (IWICFormatConverter*)pConvertedSourceBitmap;
+
   LPRENDERERCONTEXT pRendererContext = PaniViewApp_GetRendererContext();
   if (pRendererContext) {
     pRendererContext->LoadWICBitmap(pRendererContext, pConvertedSourceBitmap);
@@ -1094,8 +1099,11 @@ HRESULT PaniViewApp_LoadFromFileWIC(PWSTR pszPath)
   HRESULT hr = S_OK;
 
   IWICBitmapSource* pConvertedSourceBitmap = NULL;
-
   pConvertedSourceBitmap = WICDecodeFromFilename(pszPath);
+
+  // Set the loaded source bitmap to application
+  LPPANIVIEWAPP pApp = GetApp();
+  pApp->m_pConvertedSourceBitmap = (IWICFormatConverter*)pConvertedSourceBitmap;
 
   LPRENDERERCONTEXT pRendererContext = PaniViewApp_GetRendererContext();
   if (pRendererContext) {
